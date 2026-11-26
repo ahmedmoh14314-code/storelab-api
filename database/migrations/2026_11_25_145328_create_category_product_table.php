@@ -10,17 +10,16 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('category_product', function (Blueprint $table) {
-        $table->foreignId('product_id')
-            ->constrained('products');
+    {
+        Schema::create('category_product', function (Blueprint $table) {
 
-        $table->foreignId('category_id')
-            ->constrained('categories');
+            $table->foreignId('product_id')->constrained('products');
 
-        $table->primary(['product_id', 'category_id']);
-    });
-}
+            $table->foreignId('category_id')->constrained('categories');
+
+            $table->primary(['product_id', 'category_id']);
+        });
+    }
 
     /**
      * Reverse the migrations.
