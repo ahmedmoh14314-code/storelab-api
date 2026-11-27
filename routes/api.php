@@ -26,3 +26,9 @@ Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword
 
 Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])
     ->middleware('throttle:5,1');
+
+Route::post('/products', [ProductController::class, 'store'])
+    ->middleware(['auth:sanctum', 'can:manage-products']);
+
+Route::patch('/products/{product}', [ProductController::class, 'update'])
+    ->middleware(['auth:sanctum', 'can:manage-products']);
