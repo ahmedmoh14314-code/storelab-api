@@ -11,7 +11,9 @@ class ProductController extends Controller
 {
     public function index(): JsonResponse
     {
-        $products = Product::where('is_active', true)->get();
+        $products = Product::with('categories')
+            ->where('is_active', true)
+            ->get();
 
         return response()->json([
             'data' => $products,
@@ -20,7 +22,8 @@ class ProductController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        $product = Product::where('is_active', true)
+        $product = Product::with('categories')
+            ->where('is_active', true)
             ->findOrFail($id);
 
         return response()->json([
@@ -60,6 +63,21 @@ class ProductController extends Controller
         return response()->json([
             'message' => 'Product updated successfully',
             'data' => $product,
+        ]);
+    }
+
+    public function syncCategories(Request $request, Product $product): JsonResponse
+    {
+        $data = $request->validate([
+            'category_ids' => ['present', 'array'],
+            'category_ids.*' => ['integer', 'distinct', 'exists:categories,id'],
+        ]);
+
+        $product->categories()->sync($data['category_ids']);
+
+        return response()->json([
+            'message' => 'Product categories updated successfully',
+            'data' => $product->load('categories'),
         ]);
     }
 }

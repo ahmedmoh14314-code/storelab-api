@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
@@ -31,4 +32,13 @@ Route::post('/products', [ProductController::class, 'store'])
     ->middleware(['auth:sanctum', 'can:manage-products']);
 
 Route::patch('/products/{product}', [ProductController::class, 'update'])
+    ->middleware(['auth:sanctum', 'can:manage-products']);
+
+Route::get('/categories', [CategoryController::class, 'index']);
+
+Route::post('/categories', [CategoryController::class, 'store'])
+    ->middleware(['auth:sanctum', 'can:manage-categories']);
+
+// put
+Route::put('/products/{product}/categories', [ProductController::class, 'syncCategories'])
     ->middleware(['auth:sanctum', 'can:manage-products']);
